@@ -1,26 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useEffect} from 'react';
+import { useJitsi } from 'react-jutsu';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  
+  const roomName = 'test'
+  const parentNode = 'jitsiArea'
+  const jitsi = useJitsi({ roomName, parentNode })
+
+  useEffect(() => {
+    if (jitsi) {
+      jitsi.addEventListener('videoConferenceJoined', () => {
+        jitsi.executeCommand('displayName', 'test')
+        jitsi.executeCommand('password', 'test1234')
+        jitsi.executeCommand('subject', 'testingPase')
+      })
+    }
+    return () => jitsi && jitsi.dispose()
+  }, [jitsi])
+
+  return <div id={parentNode} />
 }
 
 export default App;
